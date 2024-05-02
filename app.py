@@ -27,7 +27,7 @@ def main():
     st.title('Yahoo Finance Statistics Scraper')
 
     # Input form untuk simbol saham
-    symbols = st.text_area('Masukkan simbol saham (pisahkan dengan koma)', 'GGRM.JK')
+    symbols = st.text_area('Masukkan simbol saham (pisahkan dengan koma)', 'MPMX.JK,GGRM.JK')
 
     modal_rupiah = st.number_input("Masukkan modal dalam Rupiah", step=1000000, format="%d")
 
