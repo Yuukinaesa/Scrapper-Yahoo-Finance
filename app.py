@@ -8,12 +8,12 @@ def fetch_stock_data(symbols):
         stock = yf.Ticker(symbol)
         info = stock.info
         stock_data = {
-            'Price/Book': info.get('priceToBook'),
-            'Trailing P/E': info.get('trailingPE'),
-            'Total Debt/Equity (mrq)': info.get('debtToEquity'),
-            'Return on Equity (%)': info.get('returnOnEquity') * 100,
-            'Diluted EPS (ttm)': info.get('trailingEps'),
-            'Forward Annual Dividend Rate': info.get('dividendRate')
+            'Price/Book (PBVR)': info.get('priceToBook'),
+            'Trailing P/E (PER)': info.get('trailingPE'),
+            'Total Debt/Equity (mrq) (DER)': info.get('debtToEquity'),
+            'Return on Equity (%) (ROE)': info.get('returnOnEquity') * 100,
+            'Diluted EPS (ttm) (EPS)': info.get('trailingEps'),
+            'Forward Annual Dividend Rate (DPS)': info.get('dividendRate')
         }
         data[symbol] = stock_data
     return data
