@@ -11,7 +11,7 @@ def fetch_stock_data(symbols):
             'Price/Book': info.get('priceToBook'),
             'Trailing P/E': info.get('trailingPE'),
             'Total Debt/Equity (mrq)': info.get('debtToEquity'),
-            'Return on Equity': info.get('returnOnEquity'),
+            'Return on Equity (%)': info.get('returnOnEquity') * 100,
             'Diluted EPS (ttm)': info.get('trailingEps'),
             'Forward Annual Dividend Rate': info.get('dividendRate')
         }
