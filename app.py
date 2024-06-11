@@ -27,6 +27,9 @@ def fetch_stock_data(symbols):
 def main():
     st.set_page_config(page_title="Yahoo Finance Statistics Scraper", layout="wide")
     st.title('Yahoo Finance Statistics Scraper')
+    st.write('Selamat datang!')
+    st.write('👈 Silahkan pilih aplikasi yang digunakan pada menu sidebar. 👈')
+    st.write('@Yuukinaesa - Arfan Hidayat Priyantono')
     st.markdown('<div style="float:right;">'
                 '<a href="https://www.facebook.com/yuukinaesa/" target="_blank"><button style="background-color:#3b5998;color:white;border-radius:5px;padding:10px 15px;border:none;margin-right:5px;">Facebook</button></a>'
                 '<a href="https://www.instagram.com/yuukinaesa/" target="_blank"><button style="background-color:#e4405f;color:white;border-radius:5px;padding:10px 15px;border:none;margin-right:5px;">Instagram</button></a>'
