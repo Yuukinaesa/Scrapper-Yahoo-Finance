@@ -2,7 +2,6 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import plotly.express as px
-import random
 
 def fetch_stock_data(symbols):
     data = {}
@@ -10,7 +9,7 @@ def fetch_stock_data(symbols):
         stock = yf.Ticker(symbol)
         info = stock.info
         current_price = round(info.get('regularMarketPrice', info.get('regularMarketPreviousClose')) or 0)
-        forward_dividend_yield = info.get('dividendYield', 0) * 100  # Convert to percentage
+        forward_dividend_yield = info.get('dividendYield', 0) * 100  
         stock_data = {
             'Symbol': symbol,
             'Price/Book (PBVR)': info.get('priceToBook'),
@@ -25,9 +24,6 @@ def fetch_stock_data(symbols):
         data[symbol] = stock_data
     return data
 
-def random_color():
-    return "rgba({}, {}, {}, 0.6)".format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-
 def main():
     st.set_page_config(page_title="Yahoo Finance Statistics Scraper", layout="wide")
     st.title('Yahoo Finance Statistics Scraper')
@@ -35,20 +31,23 @@ def main():
     st.sidebar.header('Input Parameters')
     symbols = st.sidebar.text_area('Masukkan simbol saham (pisahkan dengan koma)', 'BBCA.JK,BBRI.JK,GOTO.JK,TLKM.JK,WSKT.JK,ASII.JK')
     modal_rupiah = st.sidebar.number_input("Masukkan modal dalam Rupiah", step=1000000, format="%d")
+    period = st.sidebar.selectbox(
+        'Pilih jangka waktu data historis',
+        ['1d', '5d', '1mo', '1y', '2y', '3y', '4y', '5y', 'max'],
+        index=8
+    )
 
     if st.sidebar.button('Ambil Data'):
         try:
             symbols_list = [symbol.strip().upper() for symbol in symbols.split(',')]
             stocks_data = fetch_stock_data(symbols_list)
-
             df = pd.DataFrame(stocks_data).T
             df['Jumlah Saham'] = modal_rupiah / df['Current Price (Hrg)'].fillna(0)
-            df['Jumlah Lot'] = df['Jumlah Saham'] // 100  # Jumlah lot yang bisa dibeli, dibulatkan ke bawah ke bilangan genap terdekat
-            df['Jumlah Saham'] = df['Jumlah Lot'] * 100  # Jumlah saham berdasarkan jumlah lot yang dapat dibeli
+            df['Jumlah Lot'] = df['Jumlah Saham'] // 100  
+            df['Jumlah Saham'] = df['Jumlah Lot'] * 100  
             df['Dividen (Hasil)'] = df['Jumlah Saham'] * df['Forward Annual Dividend Rate (DPS)']
-            df['Modal'] = modal_rupiah  # Add modal column
-            
-            # Handle None values by filling with a default value
+            df['Modal'] = df['Jumlah Lot'] * 100 * df['Current Price (Hrg)']  
+
             df.fillna(value={
                 'Current Price (Hrg)': 0,
                 'Price/Book (PBVR)': 0,
@@ -61,48 +60,59 @@ def main():
                 'Jumlah Saham': 0,
                 'Dividen (Hasil)': 0,
                 'Jumlah Lot': 0,
-                'Modal': modal_rupiah
+                'Modal': 0  
             }, inplace=True)
 
-            # Display the dataframe
             st.subheader('Data Statistik Terbaru')
-            st.dataframe(df.reset_index(drop=True).style.format({
-                'Current Price (Hrg)': 'Rp{:,.0f}',
-                'Price/Book (PBVR)': '{:.2f}',
-                'Trailing P/E (PER)': '{:.2f}',
-                'Total Debt/Equity (mrq) (DER)': '{:.2f}',
-                'Return on Equity (%) (ROE)': '{:.0f}%',
-                'Diluted EPS (ttm) (EPS)': '{:.0f}',
-                'Forward Annual Dividend Rate (DPS)': 'Rp{:,.0f}',
-                'Forward Annual Dividend Yield (%)': '{:.0f}%',
-                'Jumlah Saham': '{:.0f}',
-                'Dividen (Hasil)': 'Rp{:,.0f}',
-                'Jumlah Lot': '{:.0f}',
-                'Modal': 'Rp{:,.0f}'
-            }))
+            with st.expander("Tampilkan Data Statistik"):
+                st.dataframe(df.reset_index(drop=True).style.format({
+                    'Current Price (Hrg)': 'Rp{:,.0f}',
+                    'Price/Book (PBVR)': '{:.2f}',
+                    'Trailing P/E (PER)': '{:.2f}',
+                    'Total Debt/Equity (mrq) (DER)': '{:.2f}',
+                    'Return on Equity (%) (ROE)': '{:.0f}%',
+                    'Diluted EPS (ttm) (EPS)': '{:.0f}',
+                    'Forward Annual Dividend Rate (DPS)': 'Rp{:,.0f}',
+                    'Forward Annual Dividend Yield (%)': '{:.0f}%',
+                    'Jumlah Saham': '{:.0f}',
+                    'Dividen (Hasil)': 'Rp{:,.0f}',
+                    'Jumlah Lot': '{:.0f}',
+                    'Modal': 'Rp{:,.0f}'
+                }))
 
-            # Display horizontal bar charts with random colors
             st.subheader('Chart Analysis')
             col1, col2 = st.columns(2)
 
-            # Random colors for each bar
-            df['Color'] = df.apply(lambda x: random_color(), axis=1)
+            with col1:
+                with st.expander("Tampilkan Chart Dividen"):
+                    fig1 = px.bar(df.reset_index(), x='Dividen (Hasil)', y='index', orientation='h', 
+                                  title='Dividen (Hasil) per Emiten',
+                                  color='index')
+                    fig1.update_layout(showlegend=False)
+                    fig1.update_xaxes(title_text='Dividen (Hasil)')
+                    fig1.update_yaxes(title_text='Emiten')
+                    st.plotly_chart(fig1)
 
-            fig1 = px.bar(df.reset_index(), x='Dividen (Hasil)', y='index', orientation='h', 
-                          title='Dividen (Hasil) per Emiten',
-                          color='index', color_discrete_sequence=df['Color'].tolist())
-            fig1.update_layout(showlegend=False)
-            fig1.update_xaxes(title_text='Dividen (Hasil)')
-            fig1.update_yaxes(title_text='Emiten')
-            col1.plotly_chart(fig1)
+            with col2:
+                with st.expander("Tampilkan Chart Forward Annual Dividend Yield"):
+                    fig2 = px.bar(df.reset_index(), x='Forward Annual Dividend Yield (%)', y='index', orientation='h', 
+                                  title='Forward Annual Dividend Yield (%) Emiten',
+                                  color='index')
+                    fig2.update_layout(showlegend=False)
+                    fig2.update_xaxes(title_text='Forward Annual Dividend Yield (%)')
+                    fig2.update_yaxes(title_text='Emiten')
+                    st.plotly_chart(fig2)
 
-            fig2 = px.bar(df.reset_index(), x='Forward Annual Dividend Yield (%)', y='index', orientation='h', 
-                          title='Forward Annual Dividend Yield (%) Emiten',
-                          color='index', color_discrete_sequence=df['Color'].tolist())
-            fig2.update_layout(showlegend=False)
-            fig2.update_xaxes(title_text='Forward Annual Dividend Yield (%)')
-            fig2.update_yaxes(title_text='Emiten')
-            col2.plotly_chart(fig2)
+            st.subheader('Real-time Stock Price Charts')
+            for symbol in symbols_list:
+                with st.expander(f'{symbol} - Real-time Stock Price'):
+                    placeholder = st.empty()
+                    data = yf.download(symbol, period=period, interval='1d')['Close']
+                    if not data.empty:
+                        fig = px.line(data, title=f'{symbol} Stock Price ({period})')
+                        placeholder.plotly_chart(fig)
+                    else:
+                        st.warning(f'Tidak ada data untuk {symbol} dalam periode {period}.')
 
         except Exception as e:
             st.error(f"Terjadi kesalahan: {str(e)}")
