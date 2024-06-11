@@ -9,7 +9,7 @@ def fetch_stock_data(symbols):
         stock = yf.Ticker(symbol)
         info = stock.info
         current_price = round(info.get('regularMarketPrice', info.get('regularMarketPreviousClose')) or 0)
-        forward_dividend_yield = info.get('dividendYield', 0) * 100  
+        forward_dividend_yield = round(info.get('dividendYield', 0) * 100, 2)  
         stock_data = {
             'Symbol': symbol,
             'Price/Book (PBVR)': info.get('priceToBook'),
@@ -18,7 +18,7 @@ def fetch_stock_data(symbols):
             'Return on Equity (%) (ROE)': round((info.get('returnOnEquity') or 0) * 100),
             'Diluted EPS (ttm) (EPS)': round(info.get('trailingEps') or 0),
             'Forward Annual Dividend Rate (DPS)': round(info.get('dividendRate') or 0),
-            'Forward Annual Dividend Yield (%)': round(forward_dividend_yield or 0),
+            'Forward Annual Dividend Yield (%)': forward_dividend_yield,
             'Current Price (Hrg)': current_price
         }
         data[symbol] = stock_data
@@ -73,7 +73,7 @@ def main():
                     'Return on Equity (%) (ROE)': '{:.0f}%',
                     'Diluted EPS (ttm) (EPS)': '{:.0f}',
                     'Forward Annual Dividend Rate (DPS)': 'Rp{:,.0f}',
-                    'Forward Annual Dividend Yield (%)': '{:.0f}%',
+                    'Forward Annual Dividend Yield (%)': '{:.2f}%',
                     'Jumlah Saham': '{:.0f}',
                     'Dividen (Hasil)': 'Rp{:,.0f}',
                     'Jumlah Lot': '{:.0f}',
