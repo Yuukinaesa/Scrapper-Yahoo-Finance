@@ -46,6 +46,7 @@ def main():
             df['Jumlah Lot'] = df['Jumlah Saham'] // 100  # Jumlah lot yang bisa dibeli, dibulatkan ke bawah ke bilangan genap terdekat
             df['Jumlah Saham'] = df['Jumlah Lot'] * 100  # Jumlah saham berdasarkan jumlah lot yang dapat dibeli
             df['Dividen (Hasil)'] = df['Jumlah Saham'] * df['Forward Annual Dividend Rate (DPS)']
+            df['Modal'] = modal_rupiah  # Add modal column
             
             # Handle None values by filling with a default value
             df.fillna(value={
@@ -59,7 +60,8 @@ def main():
                 'Forward Annual Dividend Yield (%)': 0,
                 'Jumlah Saham': 0,
                 'Dividen (Hasil)': 0,
-                'Jumlah Lot': 0
+                'Jumlah Lot': 0,
+                'Modal': modal_rupiah
             }, inplace=True)
 
             # Display the dataframe
@@ -75,7 +77,8 @@ def main():
                 'Forward Annual Dividend Yield (%)': '{:.0f}%',
                 'Jumlah Saham': '{:.0f}',
                 'Dividen (Hasil)': 'Rp{:,.0f}',
-                'Jumlah Lot': '{:.0f}'
+                'Jumlah Lot': '{:.0f}',
+                'Modal': 'Rp{:,.0f}'
             }))
 
             # Display horizontal bar charts with random colors
@@ -100,18 +103,9 @@ def main():
             fig2.update_xaxes(title_text='Forward Annual Dividend Yield (%)')
             fig2.update_yaxes(title_text='Emiten')
             col2.plotly_chart(fig2)
-            
-            # Save as CSV button
-            if st.button("Save as CSV"):
-                csv_data = df.to_csv(index=False, sep=';')
-                st.download_button(label="Download CSV", data=csv_data, file_name="stock_data.csv", mime="text/csv")
 
         except Exception as e:
             st.error(f"Terjadi kesalahan: {str(e)}")
 
 if __name__ == "__main__":
     main()
-
-
-
-
