@@ -27,6 +27,11 @@ def fetch_stock_data(symbols):
 def main():
     st.set_page_config(page_title="Yahoo Finance Statistics Scraper", layout="wide")
     st.title('Yahoo Finance Statistics Scraper')
+    st.markdown('<div style="float:right;">'
+                '<a href="https://www.facebook.com/yuukinaesa/" target="_blank"><button style="background-color:#3b5998;color:white;border-radius:5px;padding:10px 15px;border:none;margin-right:5px;">Facebook</button></a>'
+                '<a href="https://www.instagram.com/yuukinaesa/" target="_blank"><button style="background-color:#e4405f;color:white;border-radius:5px;padding:10px 15px;border:none;margin-right:5px;">Instagram</button></a>'
+                '<a href="https://id.linkedin.com/in/yuukinaesa/" target="_blank"><button style="background-color:#0e76a8;color:white;border-radius:5px;padding:10px 15px;border:none;">LinkedIn</button></a>'
+                '</div>', unsafe_allow_html=True)
 
     st.sidebar.header('Input Parameters')
     symbols = st.sidebar.text_area('Masukkan simbol saham (pisahkan dengan koma)', 'BBCA.JK,BBRI.JK,GOTO.JK,TLKM.JK,WSKT.JK,ASII.JK')
