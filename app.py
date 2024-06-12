@@ -88,6 +88,29 @@ def main():
                     'Modal': 'Rp{:,.0f}'
                 }))
 
+            st.subheader('Chart Analysis')
+            col1, col2 = st.columns(2)
+
+            with col1:
+                with st.expander("Tampilkan Chart Dividen"):
+                    fig1 = px.bar(df.reset_index(), x='Dividen (Hasil)', y='index', orientation='h', 
+                                  title='Dividen (Hasil) per Emiten',
+                                  color='index')
+                    fig1.update_layout(showlegend=False)
+                    fig1.update_xaxes(title_text='Dividen (Hasil)')
+                    fig1.update_yaxes(title_text='Emiten')
+                    st.plotly_chart(fig1)
+
+            with col2:
+                with st.expander("Tampilkan Chart Forward Annual Dividend Yield"):
+                    fig2 = px.bar(df.reset_index(), x='Forward Annual Dividend Yield (%)', y='index', orientation='h', 
+                                  title='Forward Annual Dividend Yield (%) Emiten',
+                                  color='index')
+                    fig2.update_layout(showlegend=False)
+                    fig2.update_xaxes(title_text='Forward Annual Dividend Yield (%)')
+                    fig2.update_yaxes(title_text='Emiten')
+                    st.plotly_chart(fig2)
+
             st.subheader('Real-time Stock Price Charts')
             for symbol in symbols_list:
                 with st.expander(f'{symbol} - Real-time Stock Price'):
