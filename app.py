@@ -30,12 +30,18 @@ def main():
     st.write('Selamat datang!')
     st.write('👈 Silahkan pilih aplikasi yang digunakan pada menu sidebar. 👈')
     st.write('@Yuukinaesa - Arfan Hidayat Priyantono')
-    st.markdown('<div style="float:right;">'
-                '<a href="https://www.facebook.com/yuukinaesa/" target="_self"><button style="background-color:#3b5998;color:white;border-radius:5px;padding:10px 15px;border:none;margin-right:5px;">Facebook</button></a>'
-                '<a href="https://www.instagram.com/yuukinaesa/" target="_self"><button style="background-color:#e4405f;color:white;border-radius:5px;padding:10px 15px;border:none;margin-right:5px;">Instagram</button></a>'
-                '<a href="https://id.linkedin.com/in/yuukinaesa/" target="_self"><button style="background-color:#0e76a8;color:white;border-radius:5px;padding:10px 15px;border:none;">LinkedIn</button></a>'
-                '</div>', unsafe_allow_html=True)
 
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button('Facebook'):
+            st.markdown('<a href="https://www.facebook.com/yuukinaesa/" target="_self">Go to Facebook</a>', unsafe_allow_html=True)
+    with col2:
+        if st.button('Instagram'):
+            st.markdown('<a href="https://www.instagram.com/yuukinaesa/" target="_self">Go to Instagram</a>', unsafe_allow_html=True)
+    with col3:
+        if st.button('LinkedIn'):
+            st.markdown('<a href="https://id.linkedin.com/in/yuukinaesa/" target="_self">Go to LinkedIn</a>', unsafe_allow_html=True)
     st.sidebar.header('Input Parameters')
     symbols = st.sidebar.text_area('Masukkan simbol saham (pisahkan dengan koma)', 'BBCA.JK,BBRI.JK,GOTO.JK,TLKM.JK,WSKT.JK,ASII.JK')
     modal_rupiah = st.sidebar.number_input("Masukkan modal dalam Rupiah", step=1000000, format="%d")
