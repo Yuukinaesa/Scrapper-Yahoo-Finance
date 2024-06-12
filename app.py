@@ -25,6 +25,7 @@ def fetch_stock_data(symbols):
     return data
 
 def main():
+    st.set_page_config(page_title="Yahoo Finance Statistics Scraper", layout="wide")
     st.title('Yahoo Finance Statistics Scraper')
     st.write('Selamat datang!')
     st.write('👈 Silahkan pilih aplikasi yang digunakan pada menu sidebar. 👈')
