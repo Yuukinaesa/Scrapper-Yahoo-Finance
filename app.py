@@ -28,7 +28,6 @@ def main():
     st.title('Yahoo Finance Statistics Scraper')
     st.write('👈 Silahkan pilih aplikasi yang digunakan pada menu sidebar. 👈')
 
-
     st.sidebar.header('Input Parameters')
     symbols = st.sidebar.text_area('Masukkan simbol saham (pisahkan dengan koma)', 'BBCA.JK,BBRI.JK,GOTO.JK,TLKM.JK,WSKT.JK,ASII.JK')
     modal_rupiah = st.sidebar.number_input("Masukkan modal dalam Rupiah", step=1000000, format="%d")
